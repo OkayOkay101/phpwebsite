@@ -30,7 +30,7 @@
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">รหัสผ่าน</label>
-        <input type="password" class="form-control" id="password" name="password" required>
+        <input type="password" class="form-control" id="password" name="password">
       </div>
       <button type="submit" class="btn btn-success">เข้าสู่ระบบ</button> <button type="reset" class="btn btn-warning">ล้างข้อมูล</button> <a href="index.php" class="btn btn-info">กลับหน้าหลัก</a>
     </form>
