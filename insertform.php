@@ -21,7 +21,7 @@
 
 <body>
   <div class="container">
-    <?php //include "nav.php"; 
+    <?php include "nav.php"; 
     ?>
     <h2 class="text-center">บันทึกข้อมูลพนักงาน</h2>
     <hr>
