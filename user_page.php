@@ -46,6 +46,7 @@ if (!$_SESSION["emp_id"]) {
             <th>ทักษะความสามารถ</th>
             <th>เบอร์โทรศัพท์</th>
             <th>แก้ไข</th>
+            <th>แก้ไข</th>
 
           </tr>
         </thead>
@@ -60,6 +61,7 @@ if (!$_SESSION["emp_id"]) {
             <td><?php echo $row["emp_tel"]; ?></td>
             <!--แก้ไขข้อมูล-->
             <td><a href="editformdata.php?emp_id=<?php echo $row["emp_id"] ?>" class="btn btn-success">แก้ไข</a></td>
+            <td><a href="deletedata.php?id=<?php echo $row["emp_id"]; ?>" class="btn btn-danger btn-sm" onclick="return confirm('คุณต้องการลบข้อมูลนี้หรือไม่?');">ลบ</a></td>
           </tr>
         </tbody>
       </table>

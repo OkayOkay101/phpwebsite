@@ -1,49 +1,31 @@
 <?php
 session_start();
 require("dbconnect.php");
+if (isset($_POST['username'])) {
+  //รับค่าเข้ามาจากฟอร์ม login
+  $username = $_POST['username'];
+  $password = md5($_POST['password']); // ถอดรหัส MD5
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+  $sql = "SELECT * FROM employee where emp_user='" . $username . "' AND emp_pass='" . $password . "'";
+  $result = mysqli_query($con, $sql);
 
-    if (empty($username) || empty($password)) {
-        echo "<script>alert('Please fill in all fields.'); window.history.back();</script>";
-        exit();
+  if (mysqli_num_rows($result) == 1) {
+    $row = mysqli_fetch_array($result);
+    $_SESSION["emp_id"] = $row["emp_id"];
+    $_SESSION["emp_user"] = $row["emp_name"] . " " . $row["empp_username"];
+    $_SESSION["emp_level"] = $row["emp_level"];
+    if ($_SESSION["emp_level"] == "a") { // ถ้าเป็น a ให้กระโดดไปหน้า admin_page.php
+      header("location:admin_page.php");
     }
-
-    // Secure SQL using prepared statements
-    $stmt = $con->prepare("SELECT * FROM employee WHERE emp_user = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 1) {
-        $row = $result->fetch_assoc();
-
-        // Verify password
-        if (md5($password) === $row['emp_pass']) { // Replace with password_verify() for better security
-            $_SESSION["emp_id"] = $row["emp_id"];
-            $_SESSION["emp_user"] = $row["emp_name"] . " " . $row["empp_username"];
-            $_SESSION["emp_level"] = $row["emp_level"];
-
-            // Redirect based on level
-            if ($_SESSION["emp_level"] === "a") {
-                header("location:admin_page.php");
-                exit();
-            } elseif ($_SESSION["emp_level"] === "u") {
-                header("location:user_page.php");
-                exit();
-            }
-        } else {
-            echo "<script>alert('Invalid username or password.'); window.history.back();</script>";
-        }
-    } else {
-        echo "<script>alert('Invalid username or password.'); window.history.back();</script>";
+    if ($_SESSION["emp_level"] == "u") {
+      header("location:user_page.php");
     }
-
-    $stmt->close();
+  } else {
+    echo "<script>";
+    echo "alert(\"ชื่อเข้าระบบหรือรหัสผ่านไม่ถูกต้อง\");";
+    echo "window.history.back()";
+    echo "</script>";
+  }
 } else {
-    header("location:login.php");
-    exit();
+  header("location:login.php");
 }
-?>

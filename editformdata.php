@@ -67,6 +67,7 @@ $row = mysqli_fetch_assoc($result);
           </div>
           <div class="my-3">
             <input type="submit" value="แก้ไขข้อมูล" class="btn btn-success">
+            
             <input type="reset" value="ล้างข้อมูล" class="btn btn-danger">
             <a href="index.php" class="btn btn-primary">กลับหน้าแรก</a>
           </div>

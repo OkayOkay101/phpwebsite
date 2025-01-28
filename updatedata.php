@@ -1,25 +1,37 @@
 <?php
-//เชื่อมต่อฐานข้อมูล
 require('dbconnect.php');
 
-//รับค่าที่มาจากฟอร์มแก้ไข
-$emp_id = $_POST["emp_id"];
-$emp_title = $_POST["emp_title"];
-$emp_name = $_POST["emp_name"];
-$emp_surname = $_POST["emp_surname"];
-$emp_birthday = $_POST["emp_birthday"];
-$emp_adr = $_POST["emp_adr"];
-$emp_skill = $_POST["emp_skill"];
-$emp_tel = $_POST["emp_tel"];
+// ตรวจสอบว่าได้รับค่าจากฟอร์มแบบ POST หรือไม่
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // รับค่าจากฟอร์ม
+    $emp_id = intval($_POST['emp_id']);
+    $emp_title = mysqli_real_escape_string($con, $_POST['emp_title']);
+    $emp_name = mysqli_real_escape_string($con, $_POST['emp_name']);
+    $emp_surname = mysqli_real_escape_string($con, $_POST['emp_surname']);
+    $emp_birthday = mysqli_real_escape_string($con, $_POST['emp_birthday']);
+    $emp_adr = mysqli_real_escape_string($con, $_POST['emp_adr']);
+    $emp_skill = mysqli_real_escape_string($con, $_POST['emp_skill']);
+    $emp_tel = mysqli_real_escape_string($con, $_POST['emp_tel']);
 
+    // สร้างคำสั่ง SQL สำหรับอัปเดตข้อมูล
+    $sql = "UPDATE employee 
+            SET emp_title = ?, emp_name = ?, emp_surname = ?, emp_birthday = ?, emp_adr = ?, emp_skill = ?, emp_tel = ?
+            WHERE emp_id = ?";
+    
+    // ใช้ prepared statement เพื่อความปลอดภัย
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("sssssssi", $emp_title, $emp_name, $emp_surname, $emp_birthday, $emp_adr, $emp_skill, $emp_tel, $emp_id);
 
-$sql = "UPDATE employee SET emp_title ='$emp_title', emp_name ='$emp_name', emp_surname='$emp_surname',emp_birthday='$emp_birthday', emp_adr='$emp_adr', emp_skill='$emp_skill', emp_tel='$emp_tel' WHERE emp_id=$emp_id; ";
+    // ตรวจสอบการทำงาน
+    if ($stmt->execute()) {
+        header("Location: index.php?message=updated");
+        exit();
+    } else {
+        echo "เกิดข้อผิดพลาดในการอัปเดตข้อมูล: " . $stmt->error;
+    }
 
-$result = mysqli_query($con, $sql);
-
-if ($result) {
-  header("location:index.php");
-  exit(0);
+    $stmt->close();
 } else {
-  echo "ไม่สามารถแก้ไขข้อมูลได้" . mysqli_error($con);
+    echo "คำขอไม่ถูกต้อง";
 }
+?>

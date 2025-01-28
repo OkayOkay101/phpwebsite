@@ -1,17 +1,4 @@
+<!--<link href="css/style.css" rel="stylesheet">-->
 <?php
-$servername = "localhost";
-$username = "its66040233114";
-$password = "U3seT8U5"; // เว้นว่างไว้หากไม่ได้ตั้งรหัสผ่าน
-$dbname = "its66040233114"; // ชื่อฐานข้อมูลของคุณ
-
-// เชื่อมต่อฐานข้อมูล
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-// ตรวจสอบการเชื่อมต่อ
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-echo "Connected successfully";
-?>
-
-
+$con = mysqli_connect("localhost", "its66040233114", "U3seT8U5", "its66040233114") or die("เกิดข้อผิดพลาดเกิดขึ้น");
+mysqli_set_charset($con, "utf8");

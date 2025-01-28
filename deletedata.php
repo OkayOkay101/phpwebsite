@@ -1,14 +1,21 @@
 <?php
 require('dbconnect.php');
 
-$emp_id = $_GET["emp_id"];
+// ตรวจสอบว่ามีการส่ง id มาหรือไม่
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $emp_id = intval($_GET['id']); // แปลงค่าพารามิเตอร์ให้เป็นตัวเลข
 
-$sql = "DELETE FROM employee WHERE emp_id=$emp_id";
-$result = mysqli_query($con, $sql);
-
-if ($result) {
-  header("location:index.php");
-  exit(0);
+    // ลบข้อมูลจากฐานข้อมูล
+    $sql = "DELETE FROM employee WHERE emp_id = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("i", $emp_id); // ใช้ prepared statement ป้องกัน SQL Injection
+    if ($stmt->execute()) {
+        header("Location: index.php"); // กลับไปหน้าแรกหลังลบสำเร็จ
+        exit();
+    } else {
+        echo "เกิดข้อผิดพลาด: " . $con->error;
+    }
 } else {
-  echo "ไม่สามารถลบได้ หรือ มีข้อผิดพลาดเกิดขึ้น";
+    echo "ไม่พบข้อมูลที่ต้องการลบ";
 }
+?>
